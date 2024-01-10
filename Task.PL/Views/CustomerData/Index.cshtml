@@ -1,0 +1,47 @@
+﻿@model CustomerViewModel
+
+<h2>Customer Data</h2>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">Id</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+
+        <dt class="col-sm-2">Code</dt>
+        <dd class="col-sm-10">@Model.Code</dd>
+
+        <dt class="col-sm-2">Date of Registration</dt>
+        <dd class="col-sm-10">@Model.DateOfRegistration.ToShortDateString()</dd>
+
+        <dt class="col-sm-2">Customer Name</dt>
+        <dd class="col-sm-10">@Model.CustomerName</dd>
+    </dl>
+</div>
+
+<h3>Products</h3>
+
+@if (Model.Products.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+                <tr>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No products available for this customer.</p>
+}
+

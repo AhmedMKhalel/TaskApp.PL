@@ -1,0 +1,62 @@
+﻿@using TaskApp.PL.Models.Account
+@model SignInViewModel
+@{
+    ViewData["title"] = "Sign In";
+}
+
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+
+                        <div class="mb-md-5 mt-md-4 pb-5">
+
+                            <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                            <p class="text-white-50 mb-5">Please enter your login and password!</p>
+                            <form asp-action="SignIn">
+                                <div class="form-outline form-white mb-4">
+                                    <label class="form-label" asp-for="Email" ></label>
+                                    <input type="email" id="typeEmailX" asp-for="Email" placeholder="Ex:Khalel17" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Email"></span>
+                                </div>
+
+                                <div  class="form-outline form-white mb-4 mt-3" >
+                                    <label class="form-label" asp-for="Password" for="typePasswordX"></label>
+                                    <input type="password" id="typePasswordX" asp-for="Password" placeholder="password" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Password"></span>
+
+                                </div>
+
+
+                                <p class="small mb-5 pb-lg-2"><a class="text-white-50" asp-action="ForgetPassword">Forgot password?</a></p>
+                                <div class="wthree-text">
+                                    <label>
+                                        <input class="checkbox" asp-for="RememberMe" type="checkbox" />
+
+                                        <span>Remember Me</span>
+                                    </label>
+
+                                </div>
+
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit"  >Login</button>
+
+                                <div>
+                                    <br/>
+                                    <p class="mb-0">Don't have an account? <a asp-action="#" class="text-white-50 fw-bold mt-2">Sign Up</a>
+                                    </p>
+                                </div>
+                            </form>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+ 
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+}
