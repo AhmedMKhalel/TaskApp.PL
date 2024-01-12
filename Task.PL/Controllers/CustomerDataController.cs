@@ -6,6 +6,7 @@ using System.Linq;
 using TaskApp.DAL.Contexts;
 using TaskApp.DAL.Entities;
 using TaskApp.PL.Models;
+using TaskApp.PL.Reports;
 
 [Authorize]
 public class CustomerDataController : Controller
@@ -78,11 +79,16 @@ public class CustomerDataController : Controller
             _context.SaveChanges();
 
             // Redirect to the Index action after successful save
-            return RedirectToAction("Index", new { id = customer.Id });
+            return RedirectToAction("GetCustomersReport", new { id = customer.Id });
         }
 
         // Model state is not valid, redisplay the form with validation errors
         return View(model);
     }
 
+    public IActionResult GetCustomersReport()
+    {
+        CustomerReport customerReport = new CustomerReport(); 
+        return View(customerReport);
+    }
 }
