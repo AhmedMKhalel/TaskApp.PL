@@ -1,47 +1,80 @@
-﻿@model CustomerViewModel
+﻿@model AddCustomerDataViewModel
 
-<h2>Customer Data</h2>
+<h2>Add Customer Data</h2>
 
-<div>
-    <dl class="row">
-        <dt class="col-sm-2">Id</dt>
-        <dd class="col-sm-10">@Model.Id</dd>
+<form asp-action="AddCustomerData" method="post">
+    <!-- Form fields for customer data -->
+    <div>
+        <label asp-for="Code"></label>
+        <input asp-for="Code" class="form-control" />
+        <span asp-validation-for="Code" class="text-danger"></span>
+    </div>
 
-        <dt class="col-sm-2">Code</dt>
-        <dd class="col-sm-10">@Model.Code</dd>
+    <div>
+        <label asp-for="CustomerName"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
 
-        <dt class="col-sm-2">Date of Registration</dt>
-        <dd class="col-sm-10">@Model.DateOfRegistration.ToShortDateString()</dd>
+    <div>
+        <label asp-for="DateOfRegistration"></label>
+        <input asp-for="DateOfRegistration" class="form-control" />
+        <span asp-validation-for="DateOfRegistration" class="text-danger"></span>
+    </div>
 
-        <dt class="col-sm-2">Customer Name</dt>
-        <dd class="col-sm-10">@Model.CustomerName</dd>
-    </dl>
-</div>
-
-<h3>Products</h3>
-
-@if (Model.Products.Any())
-{
-    <table class="table">
+    <!-- Table for products -->
+    <table class="table" id="productsTable">
         <thead>
             <tr>
-                <th>Product</th>
+                <th>Product Name</th>
                 <th>Price</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in Model.Products)
+            @if (Model.Products != null)
             {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Price</td>
-                </tr>
+                for (int i = 0; i < Model.Products.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="Products[i].Name" class="form-control" />
+                            <span asp-validation-for="Products[i].Name" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input asp-for="Products[i].Price" class="form-control" />
+                            <span asp-validation-for="Products[i].Price" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
-}
-else
-{
-    <p>No products available for this customer.</p>
-}
 
+    <button type="button" class="btn btn-primary" onclick="addRow()">Add Product</button>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+
+@section Scripts
+{
+    <script>
+        function addRow() {
+            var table = document.getElementById("productsTable").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow(table.rows.length);
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+            cell1.innerHTML = '<input class="form-control" name="Products[' + table.rows.length + '].Name" />';
+            cell2.innerHTML = '<input class="form-control" name="Products[' + table.rows.length + '].Price" />';
+            cell3.innerHTML = '<button type="button" class="btn btn-danger" onclick="removeRow(this)">Remove</button>';
+        }
+
+        function removeRow(button) {
+            var row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+        }
+    </script>
+}

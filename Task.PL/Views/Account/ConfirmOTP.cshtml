@@ -1,0 +1,27 @@
+﻿@using TaskApp.PL.Models.Account
+@model ConfirmOTPViewModel
+
+<form asp-action="ConfirmOTP">
+    <input type="hidden" asp-for="Email" />
+
+    <div class="form-outline form-white mb-4 mt-3">
+        <label class="form-label" asp-for="OTP"></label>
+        <input type="text" id="typeEnteredOTP" asp-for="OTP" placeholder="Enter OTP" class="form-control form-control-lg" />
+        <span asp-validation-for="OTP" class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-outline-light btn-lg px-5" type="submit">Verify OTP</button>
+
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="text-danger mt-2">
+            Validation failed. Please check your OTP.
+        </div>
+    }
+</form>
+
+@section Scripts
+{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}

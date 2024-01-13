@@ -21,6 +21,10 @@ using TaskApp.DAL.Contexts;
 using TaskApp.PL.Helper;
 using DevExpress.AspNetCore.Reporting;
 using Microsoft.Extensions.FileProviders;
+using TaskApp.PL.Models;
+using TaskApp.DAL.Entities;
+using TaskApp.PL.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace TaskApp.PL
 {
@@ -35,6 +39,17 @@ namespace TaskApp.PL
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<MvcAppDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<MvcAppDbContext>()
+            .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(TokenOptions.DefaultProvider)
+            .AddDefaultTokenProviders();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+
             services.AddControllersWithViews()
                 .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
@@ -45,19 +60,11 @@ namespace TaskApp.PL
                 configurator.DisableCheckForCustomControllers();
             });
 
-            services.AddDbContext<MvcAppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.AddIdentity<IdentityUser, IdentityRole>(options =>
-            {
-                // Adjust your Identity configuration options here
-            })
-            .AddEntityFrameworkStores<MvcAppDbContext>()
-            .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>(TokenOptions.DefaultProvider);
 
             // Configure additional services if needed
         }
@@ -81,7 +88,7 @@ namespace TaskApp.PL
 
                 try
                 {
-                    var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
                     IdentityConfig.SeedBasicUser(userManager).Wait();
                 }
                 catch (Exception ex)
@@ -90,6 +97,7 @@ namespace TaskApp.PL
                     logger.LogError(ex.Message, "An Error Occurred While Seeding Data!!");
                 }
             }
+
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

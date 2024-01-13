@@ -14,6 +14,9 @@ namespace TaskApp.PL.Models.Account
 
         public bool RememberMe { get; set; }
 
+        public bool UseOTP { get; set; }
+        public string OTP { get; set; }
+
 
 
     }

@@ -10,25 +10,21 @@
         <label asp-for="Code"></label>
         <input asp-for="Code" class="form-control" />
         <span asp-validation-for="Code" class="text-danger"></span>
-
     </div>
 
     <!-- ------ -->
-     <br />
+    <br />
     <div>
         <br />
-
         <label asp-for="CustomerName"></label>
         <input asp-for="CustomerName" class="form-control" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
 
-
     <!-- ------ -->
-   <br />
+    <br />
     <div>
         <br />
-
         <label asp-for="DateOfRegistration"></label>
         <input asp-for="DateOfRegistration" class="form-control" />
         <span asp-validation-for="DateOfRegistration" class="text-danger"></span>
@@ -36,7 +32,7 @@
 
     <!-- ------ -->
     <!-- Table for products -->
-    <table class="table">
+    <table class="table" id="productsTable">
         <thead>
             <tr>
                 <th>Product Name</th>
@@ -44,29 +40,50 @@
             </tr>
         </thead>
         <tbody>
-            @for (int i = 0; i < 3; i++)
+            @if (Model.Products != null)
             {
-                <tr>
-                    <td>
-                        <input asp-for="Products[i].Name" class="form-control" />
-                        <span asp-validation-for="Products[i].Name" class="text-danger"></span>
-                    </td>
-                    <td>
-                        <input asp-for="Products[i].Price" class="form-control" />
-                        <span asp-validation-for="Products[i].Price" class="text-danger"></span>
-                    </td>
-                </tr>
+                for (int i = 0; i < Model.Products.Count; i++)
+                {
+                    <tr>
+                        <td>
+                            <input asp-for="Products[i].Name" class="form-control" />
+                            <span asp-validation-for="Products[i].Name" class="text-danger"></span>
+                        </td>
+                        <td>
+                            <input asp-for="Products[i].Price" class="form-control" />
+                            <span asp-validation-for="Products[i].Price" class="text-danger"></span>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>
 
-
+    <button type="button" id="addProductButton" class="btn btn-primary">Add Product</button>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 
 @section Scripts
 {
-<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var productIndex = @((Model.Products?.Count ?? 0) - 1);
 
+            $("#addProductButton").on("click", function () {
+                productIndex++;
+                var newRow = `
+                    <tr>
+                        <td>
+                            <input type="text" name="Products[${productIndex}].Name" class="form-control" />
+                            <span class="text-danger" data-valmsg-for="Products[${productIndex}].Name" data-valmsg-replace="true"></span>
+                        </td>
+                        <td>
+                            <input type="text" name="Products[${productIndex}].Price" class="form-control" />
+                            <span class="text-danger" data-valmsg-for="Products[${productIndex}].Price" data-valmsg-replace="true"></span>
+                        </td>
+                    </tr>`;
+                $("table tbody").append(newRow);
+            });
+        });
+    </script>
 }

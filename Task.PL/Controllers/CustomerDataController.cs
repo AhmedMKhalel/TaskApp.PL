@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using TaskApp.DAL.Contexts;
 using TaskApp.DAL.Entities;
@@ -17,14 +18,9 @@ public class CustomerDataController : Controller
     {
         _context = context;
     }
-    //private string GetLoggedInUserId()
-    //{
-    //    // Assuming you are using ASP.NET Core Identity
-    //    return User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-    //}
-    public IActionResult Index(int id )
+
+    public IActionResult Index(int id)
     {
-        
         var customerData = _context.Customers
             .Include(c => c.Products)
             .Where(c => c.Id == id)
@@ -58,37 +54,39 @@ public class CustomerDataController : Controller
     {
         if (ModelState.IsValid)
         {
-            // Map the view model to the entity model
+            if (model.Products == null)
+            {
+                model.Products = new List<ProductViewModel>();
+            }
+
             var customer = new Customer
             {
                 Code = model.Code,
                 DateOfRegistration = model.DateOfRegistration,
                 CustomerName = model.CustomerName,
-                // Map other properties as needed
+                Products = model.Products
+                    .Where(p => !string.IsNullOrWhiteSpace(p.Name) || p.Price.HasValue)
+                    .Select(p => new Product
+                    {
+                        Name = p.Name,
+                        Price = p.Price ?? 0 // Use 0 as default if Price is null
+                }).ToList()
             };
 
-            // Add products to the customer
-            customer.Products = model.Products.Select(p => new Product
-            {
-                Name = p.Name,
-                Price = p.Price
-            }).ToList();
-
-            // Add the customer to the database
             _context.Customers.Add(customer);
             _context.SaveChanges();
 
-            // Redirect to the Index action after successful save
             return RedirectToAction("GetCustomersReport", new { id = customer.Id });
         }
 
-        // Model state is not valid, redisplay the form with validation errors
         return View(model);
     }
 
+
+
     public IActionResult GetCustomersReport()
     {
-        CustomerReport customerReport = new CustomerReport(); 
+        CustomerReport customerReport = new CustomerReport();
         return View(customerReport);
     }
 }

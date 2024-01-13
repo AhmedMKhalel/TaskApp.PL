@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using TaskApp.DAL.Entities;
 
 namespace TaskApp.PL.Helper
 {
@@ -8,12 +9,12 @@ namespace TaskApp.PL.Helper
 
     public static class IdentityConfig
     {
-        public static async Task SeedBasicUser(UserManager<IdentityUser> userManager)
+        public static async Task SeedBasicUser(UserManager<ApplicationUser> userManager)
         {
-            var defaultUser = new IdentityUser()
+            var defaultUser = new ApplicationUser()
             {
-                UserName = "BasicUser@domain.com",
-                Email = "BasicUser@domain.com",
+                UserName = "ahmed.netdeveloper6@gmail.com",
+                Email = "ahmed.netdeveloper6@gmail.com",
                 EmailConfirmed = true,
             };
             var user =await userManager.FindByEmailAsync(defaultUser.Email);

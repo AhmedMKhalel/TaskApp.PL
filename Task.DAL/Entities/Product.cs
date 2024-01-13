@@ -17,7 +17,7 @@ namespace TaskApp.DAL.Entities
 
         [Required(ErrorMessage = "Price is required.")]
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than 0.")]
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
 
         // Add foreign key to relate products to customers
         public int CustomerId { get; set; }
